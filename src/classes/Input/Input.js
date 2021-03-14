@@ -10,34 +10,25 @@ export default function Input()
     Engine.getEvent().dispatch(new CustomEvent('playerInput'));
   }
 
-  document.ontouchstart = () => clicked();
+  Engine.getEvent().listen('pointerdown', () => clicked());
+  Engine.getEvent().listen('keydown', (event) => {
+    if (event.key !== ' ' || keyDownLock)
+    {
+      return;
+    }
+    
+    keyDownLock = true;
 
-  // Engine.getEvent().listen("mousedown", () => clicked());
-  // Engine.getEvent().listen("touchstart", () => clicked());
-  // Engine.getEvent().listen(
-  //   "keydown",
-  //   (event) => {
-  //     if (event.key !== ' ' || keyDownLock)
-  //     {
-  //       return;
-  //     }
-      
-  //     keyDownLock = true;
-
-  //     clicked();
-  //   }
-  // );
-  // Engine.getEvent().listen(
-  //   "keyup",
-  //   (event) => {
-  //     if (event.key !== ' ')
-  //     {
-  //       return;
-  //     }
-      
-  //     keyDownLock = false;
-  //   }
-  // );
+    clicked();
+  });
+  Engine.getEvent().listen('keyup', (event) => {
+    if (event.key !== ' ')
+    {
+      return;
+    }
+    
+    keyDownLock = false;
+  });
 
   function disableEvent(event)
   {
@@ -55,14 +46,14 @@ export default function Input()
   document.ontouchend = (event) => disableEvent(event);
   document.ontouchmove = (event) => disableEvent(event);
   document.ontouchcancel = (event) => disableEvent(event);
-  // document.ontouchstart = (event) => disableEvent(event);
+  document.ontouchstart = (event) => disableEvent(event);
 
   document.onpointerover = (event) => disableEvent(event);
   document.onpointerenter = (event) => disableEvent(event);
   document.onpointermove = (event) => disableEvent(event);
   document.onpointerup = (event) => disableEvent(event);
   document.onpointercancel = (event) => disableEvent(event);
-  document.onpointerdown = (event) => disableEvent(event);
+  // document.onpointerdown = (event) => disableEvent(event);
   document.onpointerout = (event) => disableEvent(event);
   document.onpointerleave = (event) => disableEvent(event);
   document.ongotpointercapture = (event) => disableEvent(event);
