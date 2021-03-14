@@ -8,7 +8,7 @@ Engine.addAudio(jumpAudio);
 const collideAudio = '/assets/audio/quack.wav';
 Engine.addAudio(collideAudio);
 
-export default function Bird()
+export default function Bird({debug})
 {
   const id = 'slapId_0_1';
   const jumpSpeed = 1.25;
@@ -60,6 +60,7 @@ export default function Bird()
   React.useEffect(() => {
     function handlePlayerInput()
     {
+      Engine.debugWrite('1');
       setJump(true);
       Engine.playAudio(jumpAudio);
     }
