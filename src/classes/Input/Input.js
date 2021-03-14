@@ -10,7 +10,7 @@ export default function Input()
     Engine.getEvent().dispatch(new CustomEvent('playerInput'));
   }
 
-  document.onpointerdown = () => clicked();
+  document.ontouchstart = () => clicked();
 
   // Engine.getEvent().listen("mousedown", () => clicked());
   // Engine.getEvent().listen("touchstart", () => clicked());
