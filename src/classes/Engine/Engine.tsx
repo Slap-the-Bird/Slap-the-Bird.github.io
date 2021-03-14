@@ -108,7 +108,7 @@ class Engine
 
   debugWrite(text: string)
   {
-    document.getElementById(this.debugId).innerHTML += text;
+    document.getElementById(this.debugId).innerHTML = text;
   }
 
   stop()

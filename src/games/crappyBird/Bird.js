@@ -2,6 +2,8 @@ import React from 'react';
 import Engine from '../../classes/Engine/Engine';
 
 
+let counter = 0;
+
 const jumpAudio = '/assets/audio/jump.wav';
 Engine.addAudio(jumpAudio);
 
@@ -60,7 +62,7 @@ export default function Bird({debug})
   React.useEffect(() => {
     function handlePlayerInput()
     {
-      Engine.debugWrite('1');
+      Engine.debugWrite(`${++counter}`);
       setJump(true);
       Engine.playAudio(jumpAudio);
     }
