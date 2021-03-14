@@ -11,7 +11,7 @@ export default function Input()
   }
 
   Engine.getEvent().listen("mousedown", () => clicked());
-  Engine.getEvent().listen("touchstart", () => clicked());
+  // Engine.getEvent().listen("touchstart", () => clicked());
   Engine.getEvent().listen(
     "keydown",
     (event) => {
