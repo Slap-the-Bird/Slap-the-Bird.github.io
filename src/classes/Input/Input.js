@@ -55,7 +55,7 @@ export default function Input()
   document.ontouchend = (event) => disableEvent(event);
   document.ontouchmove = (event) => disableEvent(event);
   document.ontouchcancel = (event) => disableEvent(event);
-  document.ontouchstart = (event) => disableEvent(event);
+  // document.ontouchstart = (event) => disableEvent(event);
 
   document.onpointerover = (event) => disableEvent(event);
   document.onpointerenter = (event) => disableEvent(event);
