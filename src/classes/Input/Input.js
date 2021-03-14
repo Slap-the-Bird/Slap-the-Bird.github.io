@@ -62,7 +62,7 @@ export default function Input()
   document.onpointermove = (event) => disableEvent(event);
   document.onpointerup = (event) => disableEvent(event);
   document.onpointercancel = (event) => disableEvent(event);
-  // document.onpointerdown = (event) => disableEvent(event);
+  document.onpointerdown = (event) => disableEvent(event);
   document.onpointerout = (event) => disableEvent(event);
   document.onpointerleave = (event) => disableEvent(event);
   document.ongotpointercapture = (event) => disableEvent(event);
