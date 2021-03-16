@@ -1,23 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 
+import Engine from '../Engine/Engine';
 import ctx, { Data } from './Data';
 
 
-class MockDomRect
-{
-  height;
-  width;
-  x;
-  y;
-  bottom;
-  left;
-  right;
-  top;
-  toJSON() {
-    throw new Error('Method not implemented.');
-  }
-};
+const handler = jest.fn();
 
 function Player(props)
 {
@@ -25,47 +14,54 @@ function Player(props)
   const [context, setContext] = React.useContext(ctx);
 
   React.useEffect(() => {
-    let objA = new MockDomRect();
-    objA.x = 0;
-    objA.y = 0;
-    objA.width = 1;
-    objA.height = 1;
+    Engine.getEvent().listen('isColliding', handler);
 
     context[props?.id] = {
-      'collider': objA,
       'tag': 'player'
     };
     setContext({...context});
   }, []);
 
   return(
-    <span ref={element} id={props?.id} style={{top: `100px`}}>
+    <span ref={element} id={props?.id} style={{position: 'fixed', transform: 'translate3d(0px, 0px, 0px)'}}>
       {context?.text}
     </span>
   );
 }
 
-function Obsticle(props)
+function Obstacle(props)
 {
   const element = React.useRef(null);
   const [context, setContext] = React.useContext(ctx);
 
   React.useEffect(() => {
-    let objB = new MockDomRect();
-    objB.x = 0;
-    objB.y = 0;
-    objB.width = 1;
-    objB.height = 1;
-
     context[props?.id] = {
-      'collider': objB,
-      'tag': 'obsticle'
+      'tag': 'obstacle'
     };
     setContext({...context});
   }, []);
 
   return(
-    <span ref={element} id={props?.id} style={{top: `100px`}}>
+    <span ref={element} id={props?.id} style={{position: 'fixed', transform: 'translate3d(0px, 0px, 0px)'}}>
+      {context?.text}
+    </span>
+  );
+}
+
+function Score(props)
+{
+  const element = React.useRef(null);
+  const [context, setContext] = React.useContext(ctx);
+
+  React.useEffect(() => {
+    context[props?.id] = {
+      'tag': 'score'
+    };
+    setContext({...context});
+  }, []);
+
+  return(
+    <span ref={element} id={props?.id} style={{position: 'fixed', transform: 'translate3d(0px, 0px, 0px)'}}>
       {context?.text}
     </span>
   );
@@ -76,12 +72,50 @@ function TestGroup()
   return (
     <Data>
       <Player id={'Player'} />
-      <Obsticle id={'Obsticle'} />
+      <Obstacle id={'Obstacle'} />
+      <Score id={'Score'} />
     </Data>
   );
 }
 
-test('Data - render', () => {
-  const { debug } = render(<TestGroup />);
-  debug();
+// https://stackoverflow.com/a/66271345
+describe('test render', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  
+    let count = 0;
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => setTimeout(() => cb(100*(++count)), 100));
+  });
+  
+  afterEach(() => {
+    window.requestAnimationFrame.mockRestore();
+    jest.clearAllTimers();
+  });
+
+  test('Data - render', () => {
+    Engine.addObject(<TestGroup />);
+
+    act(() => {
+      render(<div id="root"/>);
+      Engine.start();
+    });
+
+    document.getElementById('Player').getBoundingClientRect = jest.fn(() => ({
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1
+    }));
+
+    document.getElementById('Obstacle').getBoundingClientRect = jest.fn(() => ({
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1
+    }));
+
+    act(() => {
+      jest.advanceTimersByTime(200);
+    });
+  });
 });
